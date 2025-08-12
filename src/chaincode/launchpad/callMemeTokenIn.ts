@@ -67,6 +67,9 @@ function calculateMemeTokensRequired(sale: LaunchpadSale, requestedNativeTokenQu
  * @throws Error if the calculation results in an invalid amount (e.g., `InvalidAmountError`).
  */
 export async function callMemeTokenIn(ctx: GalaChainContext, sellTokenDTO: NativeTokenQuantityDto) {
+  if (!sellTokenDTO.vaultAddress) {
+    throw new Error("vaultAddress must be a defined string.");
+  }
   const sale = await fetchAndValidateSale(ctx, sellTokenDTO.vaultAddress);
   const launchpadFeeAddressConfiguration = await fetchLaunchpadFeeAddress(ctx);
 

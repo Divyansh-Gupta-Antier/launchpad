@@ -116,7 +116,7 @@ describe("callMemeTokenOut", () => {
     });
   });
 
-  it("should calculate the pre mint amount successfully", async () => {
+  it("should calculate the pre mint amount successfully without need for vault address", async () => {
     // Given
     const { ctx, contract } = fixture(LaunchpadContract)
       .registeredUsers(users.testUser1)
@@ -132,7 +132,7 @@ describe("callMemeTokenOut", () => {
         userCurrencyBalance
       );
 
-    const callMemeTokenOutDto = new NativeTokenQuantityDto(vaultAddress, new BigNumber(10));
+    const callMemeTokenOutDto = new NativeTokenQuantityDto(undefined, new BigNumber(10));
     callMemeTokenOutDto.IsPreMint = true;
     callMemeTokenOutDto.uniqueKey = randomUniqueKey();
 

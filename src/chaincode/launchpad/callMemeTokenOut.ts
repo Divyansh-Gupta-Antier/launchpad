@@ -45,6 +45,9 @@ export async function callMemeTokenOut(ctx: GalaChainContext, buyTokenDTO: Nativ
 
   // Fetch sale details and update parameters if this is not a sale premint calculation
   if (!buyTokenDTO.IsPreMint) {
+    if (!buyTokenDTO.vaultAddress) {
+      throw new Error("vaultAddress must be provided.");
+    }
     const sale = await fetchAndValidateSale(ctx, buyTokenDTO.vaultAddress);
     totalTokensSold = new Decimal(sale.fetchTokensSold());
 

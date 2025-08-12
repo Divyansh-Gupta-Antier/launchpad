@@ -47,6 +47,9 @@ export async function buyWithNative(
   let isSaleFinalized = false;
 
   // Fetch and validate sale state
+  if (!buyTokenDTO.vaultAddress) {
+    throw new Error("vaultAddress must be provided.");
+  }
   const sale = await fetchAndValidateSale(ctx, buyTokenDTO.vaultAddress);
   const tokensLeftInVault = new BigNumber(sale.sellingTokenQuantity);
 

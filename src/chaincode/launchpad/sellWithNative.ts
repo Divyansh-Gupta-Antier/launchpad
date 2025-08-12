@@ -46,6 +46,9 @@ export async function sellWithNative(
   sellTokenDTO: NativeTokenQuantityDto
 ): Promise<TradeResDto> {
   // Fetch and validate the sale object
+  if (!sellTokenDTO.vaultAddress) {
+    throw new ValidationFailedError("vaultAddress must be provided.");
+  }
   const sale = await fetchAndValidateSale(ctx, sellTokenDTO.vaultAddress);
 
   const nativeTokensLeftInVault = new BigNumber(sale.nativeTokenQuantity);

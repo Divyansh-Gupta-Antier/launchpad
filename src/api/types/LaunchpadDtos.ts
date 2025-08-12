@@ -237,8 +237,8 @@ export class ExactTokenQuantityDto extends SubmitCallDTO {
 
 export class NativeTokenQuantityDto extends SubmitCallDTO {
   @IsUserAlias()
-  @IsNotEmpty()
-  public vaultAddress: UserAlias;
+  @IsOptional()
+  public vaultAddress?: UserAlias;
 
   @BigNumberProperty()
   @IsNonZeroBigNumber({ message: "nativeTokenQuanity cannot be zero" })
@@ -257,9 +257,11 @@ export class NativeTokenQuantityDto extends SubmitCallDTO {
   @IsBoolean()
   public IsPreMint?: boolean;
 
-  constructor(vaultAddress: UserAlias, nativeTokenQuantity: BigNumber = new BigNumber(0)) {
+  constructor(vaultAddress?: UserAlias, nativeTokenQuantity: BigNumber = new BigNumber(0)) {
     super();
-    this.vaultAddress = vaultAddress;
+    if (vaultAddress) {
+      this.vaultAddress = vaultAddress;
+    }
     this.nativeTokenQuantity = nativeTokenQuantity;
   }
 }
