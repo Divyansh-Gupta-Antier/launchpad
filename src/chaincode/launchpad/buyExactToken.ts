@@ -12,7 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { GalaChainContext, fetchTokenClass, putChainObject, transferToken } from "@gala-chain/chaincode";
+import { ValidationFailedError } from "@gala-chain/api";
+import {
+  GalaChainContext,
+  fetchOrCreateBalance,
+  fetchTokenClass,
+  putChainObject,
+  transferToken
+} from "@gala-chain/chaincode";
 import BigNumber from "bignumber.js";
 
 import { ExactTokenQuantityDto, LaunchpadSale, TradeResDto } from "../../api/types";
@@ -82,6 +89,16 @@ export async function buyExactToken(
   // Transfer transaction fees
   const launchpadFeeAddressConfiguration = await fetchLaunchpadFeeAddress(ctx);
   if (launchpadFeeAddressConfiguration && transactionFees) {
+    const totalRequired = new BigNumber(buyTokenDTO.tokenQuantity).plus(transactionFees);
+
+    const buyerBalance = await fetchOrCreateBalance(ctx, ctx.callingUser, sale.nativeToken);
+    if (buyerBalance.getQuantityTotal().lt(totalRequired)) {
+      throw new ValidationFailedError(
+        `Insufficient balance: cannot cover transaction fees of ${transactionFees}. ` +
+          `Your balance is ${buyerBalance.getQuantityTotal()}`
+      );
+    }
+
     await transferToken(ctx, {
       from: ctx.callingUser,
       to: launchpadFeeAddressConfiguration.feeAddress,

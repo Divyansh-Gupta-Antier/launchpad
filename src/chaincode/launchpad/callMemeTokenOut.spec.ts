@@ -65,6 +65,7 @@ describe("callMemeTokenOut", () => {
       owner: vaultAddress,
       quantity: new BigNumber("97.238975330345368866")
     });
+
     saleCurrencyBalance = plainToInstance(TokenBalance, {
       ...currency.tokenBalance(),
       owner: vaultAddress,
